@@ -7,6 +7,7 @@ import com.cloudops.incidents.repository.IncidentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -36,8 +37,8 @@ public class IncidentService {
         incident.setDescription(request.getDescription());
         incident.setSeverity(request.getSeverity());
         incident.setStatus("OPEN");
-        incident.setCreatedAt(LocalDateTime.now());
-        incident.setUpdatedAt(LocalDateTime.now());
+        incident.setTimestamp(Instant.now());
+        incident.setUpdatedAt(Instant.now());
         
         incident = incidentRepository.save(incident);
         return toResponse(incident);
@@ -48,7 +49,7 @@ public class IncidentService {
         incident.setTitle(request.getTitle());
         incident.setDescription(request.getDescription());
         incident.setSeverity(request.getSeverity());
-        incident.setUpdatedAt(LocalDateTime.now());
+        incident.setUpdatedAt(Instant.now());
         
         incident = incidentRepository.save(incident);
         return toResponse(incident);
