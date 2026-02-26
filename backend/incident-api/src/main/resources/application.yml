@@ -1,0 +1,19 @@
+# CloudOps Incident Tracker API Configuration
+# This file configures how the Spring Boot application runs
+
+# Server configuration
+server:
+  port: 8080  # The port where the API listens for requests
+  
+# Application configuration
+spring:
+  application:
+    name: incident-tracker-api  # Name shown in logs and monitoring
+    
+# Logging configuration
+logging:
+  level:
+    com.cloudops.incidents: INFO  # Log level for our application code
+    org.springframework: WARN     # Less verbose Spring framework logs
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"  # Simple log format
