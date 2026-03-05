@@ -2,6 +2,9 @@ package com.cloudops.incidents.dto;
 
 import com.cloudops.incidents.model.ErrorType;
 import com.cloudops.incidents.model.Severity;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Data Transfer Object (DTO) for creating or updating incidents via the API.
@@ -16,6 +19,14 @@ import com.cloudops.incidents.model.Severity;
  * 
  * Fields like ID, timestamps, and status are automatically set by the system.
  * 
+ * Validation rules:
+ * - title: Required, 1-200 characters
+ * - description: Optional, max 1000 characters
+ * - severity: Required
+ * - serviceName: Required, 1-100 characters
+ * - errorType: Required
+ * - correlationId: Optional, max 100 characters
+ * 
  * Example JSON request:
  * {
  *   "title": "Payment API Down",
@@ -28,22 +39,48 @@ import com.cloudops.incidents.model.Severity;
  */
 public class IncidentRequest {
     
-    /** Short, descriptive title of the incident */
+    /** 
+     * Short, descriptive title of the incident.
+     * Required field, must be between 1 and 200 characters.
+     */
+    @NotBlank(message = "Title is required")
+    @Size(min = 1, max = 200, message = "Title must be between 1 and 200 characters")
     private String title;
     
-    /** Detailed description of what went wrong */
+    /** 
+     * Detailed description of what went wrong.
+     * Optional field, maximum 1000 characters.
+     */
+    @Size(max = 1000, message = "Description must not exceed 1000 characters")
     private String description;
     
-    /** How serious this incident is */
+    /** 
+     * How serious this incident is.
+     * Required field, must be one of: LOW, MEDIUM, HIGH, CRITICAL
+     */
+    @NotNull(message = "Severity is required")
     private Severity severity;
     
-    /** Which service or component failed */
+    /** 
+     * Which service or component failed.
+     * Required field, must be between 1 and 100 characters.
+     */
+    @NotBlank(message = "Service name is required")
+    @Size(min = 1, max = 100, message = "Service name must be between 1 and 100 characters")
     private String serviceName;
     
-    /** What type of failure occurred */
+    /** 
+     * What type of failure occurred.
+     * Required field, must be one of: NETWORK, APPLICATION, CONFIGURATION, RESOURCE
+     */
+    @NotNull(message = "Error type is required")
     private ErrorType errorType;
     
-    /** Optional ID for linking related events across services */
+    /** 
+     * Optional ID for linking related events across services.
+     * Maximum 100 characters.
+     */
+    @Size(max = 100, message = "Correlation ID must not exceed 100 characters")
     private String correlationId;
 
     /** Default constructor required by Spring Boot for JSON deserialization */

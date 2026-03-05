@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -108,6 +109,14 @@ public class IncidentController {
      * 
      * Creates a new incident in the system.
      * 
+     * Validation rules:
+     * - title: Required, 1-200 characters
+     * - serviceName: Required, 1-100 characters
+     * - severity: Required (LOW, MEDIUM, HIGH, CRITICAL)
+     * - errorType: Required (NETWORK, APPLICATION, CONFIGURATION, RESOURCE)
+     * - description: Optional, max 1000 characters
+     * - correlationId: Optional, max 100 characters
+     * 
      * Use cases:
      * - Automated monitoring systems reporting failures
      * - Manual incident creation by engineers
@@ -139,11 +148,11 @@ public class IncidentController {
      *   ... (all other fields from request)
      * }
      * 
-     * @param request The incident data from the client
+     * @param request The incident data from the client (validated)
      * @return HTTP 200 OK with the created incident (including generated ID)
      */
     @PostMapping
-    public ResponseEntity<IncidentResponse> createIncident(@RequestBody IncidentRequest request) {
+    public ResponseEntity<IncidentResponse> createIncident(@Valid @RequestBody IncidentRequest request) {
         return ResponseEntity.ok(incidentService.createIncident(request));
     }
 
@@ -151,6 +160,9 @@ public class IncidentController {
      * PUT /api/incidents/{id}
      * 
      * Updates an existing incident with new information.
+     * 
+     * Validation rules:
+     * - Same validation as POST (title, serviceName, severity, errorType required)
      * 
      * Use cases:
      * - Adding more details as investigation progresses
@@ -176,11 +188,11 @@ public class IncidentController {
      * }
      * 
      * @param id The ID of the incident to update
-     * @param request The new incident data
+     * @param request The new incident data (validated)
      * @return HTTP 200 OK with the updated incident
      */
     @PutMapping("/{id}")
-    public ResponseEntity<IncidentResponse> updateIncident(@PathVariable String id, @RequestBody IncidentRequest request) {
+    public ResponseEntity<IncidentResponse> updateIncident(@PathVariable String id, @Valid @RequestBody IncidentRequest request) {
         return ResponseEntity.ok(incidentService.updateIncident(id, request));
     }
 
